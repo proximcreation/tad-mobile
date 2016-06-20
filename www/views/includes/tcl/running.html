@@ -27,6 +27,18 @@
       <div class="label"><p>Revenir</p></div>
     </a>
     <a
+      class="big-btn btn-warning-t btn-left"
+      href=""
+      ng-if="life.previous.length>0"
+      ng-click="reset()"
+      style="margin-left: 5px">
+      <div class="circle-btn">
+        <i class="fa fa-power-off fa-lg"></i>
+      </div>
+      <div class="label"><p class="txt-c">Reset</p></div>
+    </a>
+
+    <a
       class="big-btn btn-base3-t btn-right"
       ng-repeat="s in automaton[life.state].nextStates"
       ng-if="s.cond()"
