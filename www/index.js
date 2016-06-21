@@ -47368,7 +47368,9 @@
 	        id: 2, // SCAN TCL
 	        l: 'Voir le diagnostic',
 	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 13 && $scope.life.m > 4;
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 13
+	          // && ($scope.life.m > 4)
+	          ;
 	        }
 	      },
 	      // ==== TCM ====
@@ -47384,7 +47386,7 @@
 	        id: 11, // SCAN TCG
 	        l: 'Voir le diagnostic',
 	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 9 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m <= 4;
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 9 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v <= 12 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m <= 4;
 	        }
 	      }]
 	    }, { // 2 : Scan TCL !!
