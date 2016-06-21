@@ -47348,27 +47348,47 @@
 	          return String('**<center>Score de Glasgow</center>**\n\n<center class="fa-2x">**' + glasgow + '**</center>');
 	        }
 	      },
-	      nextStates: [{
-	        id: 2, // SCAN
-	        l: 'Voir le diagnostic',
-	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age == 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13;
-	        }
-	      }, {
-	        id: 3, // SCAN ?? enfant
+	      nextStates: [
+	      // ==== TCL ====
+	      {
+	        id: 3, // SCAN TCL ?? enfant
 	        l: 'Dois-je faire\n\n un scanner',
 	        cond: function () {
 	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v == 15;
 	        }
 	      }, {
-	        id: 4, // SCAN ?? adulte
+	        id: 4, // SCAN TCL ?? adulte
 	        l: 'Dois-je faire\n\n un scanner',
 	        cond: function () {
 	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age == 2 && $scope.life.y + $scope.life.m + $scope.life.v >= 13;
 	        }
+	      },
+	      // ==== TCL ====
+	      {
+	        id: 2, // SCAN TCL
+	        l: 'Voir le diagnostic',
+	        cond: function () {
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 13 && $scope.life.m > 4;
+	        }
+	      },
+	      // ==== TCM ====
+	      {
+	        id: 12, // SCAN TCM
+	        l: 'Voir le diagnostic',
+	        cond: function () {
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m > 4 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age == 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m > 4;
+	        }
+	      },
+	      // ==== TCG ====
+	      {
+	        id: 11, // SCAN TCG
+	        l: 'Voir le diagnostic',
+	        cond: function () {
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 9 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m <= 4;
+	        }
 	      }]
-	    }, { // 2 : Scan !!
-	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<h4>Scanner immédiat</h4>' + '</div>'
+	    }, { // 2 : Scan TCL !!
+	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien LÉGER</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
 	    }, { // 3 : Dois-je faire un Scanner ?
 	      question: 'Constatez-vous un des points suivants&nbsp;?',
 	      options: [{
@@ -47547,6 +47567,10 @@
 	      }]
 	    }, { // 10 : Scan 4 ~ 8h
 	      question: '<div class="box2 bg-warning txt-warning txt-c round">' + '<i class="fa fa-exclamation-circle fa-2x"></i><hr>' + '<h4>Scanner à la 6ème heure<br>(entre 4 et 8h)</h4>' + '</div>'
+	    }, { // 11 : Scan TCG !!
+	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien GRAVE</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
+	    }, { // 12 : Scan TCG !!
+	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien MOYEN</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
 	    }];
 	  };
 	  init();
