@@ -6,7 +6,7 @@
     ></div>
 
   <div
-    class="box bg-base1 col-6 col-ol-3 col-or-3 txt-c mt1 round"
+    class="box txt-big {{automaton[life.state].display.cssCls}} col-8 col-ol-2 col-or-2 txt-c mt1 round"
     ng-if="
       automaton[life.state].display !== undefined &&
       automaton[life.state].display.cond()

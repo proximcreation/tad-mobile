@@ -47171,7 +47171,7 @@
 	      'Y1': ['aucune réponse', 'aucune réponse', 'nulle'],
 	      'V5': ['agit normalement', 'mot appropriés, sourit, fixe, suit du regard', 'appropriée'],
 	      'V4': ['pleure', 'mot appropriés, pleure, est consolable', 'confuse'],
-	      'V3': ['hurlement inapropriés', 'hurle, est inconsolable', 'incohérente'],
+	      'V3': ['hurlement inappropriés', 'hurle, est inconsolable', 'incohérente'],
 	      'V2': ['gémissement', 'gémit aux stimuli douloureux', 'incompréhensible'],
 	      'V1': ['aucune réponse', 'aucune réponse', 'nulle'],
 	      'M6': ['mouvements spontanés intentionnels', 'répond aux demandes', 'obéissance aux ordres verbaux'],
@@ -47192,11 +47192,11 @@
 	      'Q13': ['', '', 'suspicion de fracture ouverte du crâne au d’ambarrure'],
 	      'Q14': ['', '', 'tout signe de fracture de la base du crâne (hémotympan, ecchymose périorbitaire bilatérale, otorhée ou rhinorhée de liquide cérébrospinal)'],
 	      'Q15': ['', '', 'plus d’un épisode de vomissement chez l’adulte'],
-	      'Q16': ['', '', 'convulsion paost-traumatique'],
+	      'Q16': ['', '', 'convulsion post-traumatique'],
 	      'Q17': ['', '', 'traitement AVK'],
 	      'Q21': ['', '', 'patient sous anti-agrégant plaquettaires, même sans PCI'],
 	      'Q22': ['', '', 'amnésie des faits de plus de 30 minutes avant le traumatisme (amnésie rétrograde)'],
-	      'Q23': ['', '', 'Perte de conscience ou amnésie des faits, associée à un des mécanisme traumatique suivant : piéton renversé par un véhicule motorisé / patient éjecté d’un véhicule ou chute d’une hautenr de plus de 1m / âgé de plus de 65 ans']
+	      'Q23': ['', '', 'Perte de conscience ou amnésie des faits, associée à un des mécanismes traumatiques suivant : piéton renversé par un véhicule motorisé / patient éjecté d’un véhicule ou chute d’une hauteur de plus de 1m / âgé de plus de 65 ans']
 	    };
 
 	    var getQ = function (k) {
@@ -47341,11 +47341,32 @@
 	      }],
 	      display: {
 	        cond: function () {
-	          return true;
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined;
 	        },
+	        cssCls: 'success',
 	        getV: function () {
 	          var glasgow = ($scope.life.y !== undefined ? $scope.life.y : 0) + ($scope.life.m !== undefined ? $scope.life.m : 0) + ($scope.life.v !== undefined ? $scope.life.v : 0);
-	          return String('**<center>Score de Glasgow</center>**\n\n<center class="fa-2x">**' + glasgow + '**</center>');
+	          // return String();
+	          var scoreDisp = '**Score de Glasgow**\n\n<span style="font-size:2em;">**' + glasgow + '**</span>\n\n';
+	          if ($scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined) {
+
+	            if (glasgow <= 8) {
+	              scoreDisp += '<hr>Traumatisme crânien **GRAVE**<hr>**Stabilisation et imagerie urgente**';
+	              this.cssCls = 'bg-danger txt-w';
+	            } else if (glasgow > 8 && glasgow <= 12) {
+	              scoreDisp += '<hr>Traumatisme crânien **MOYEN**';
+	              this.cssCls = 'bg-warning';
+	              if ($scope.life.m <= 4) {
+	                scoreDisp += '\n\nÀ considérer comme **GRAVE** (M&nbsp;≥&nbsp;4)<hr>**Stabilisation et imagerie urgente**';
+	                this.cssCls = 'bg-danger txt-w';
+	              }
+	            } else if (glasgow > 12) {
+	              scoreDisp += '<hr>Traumatisme crânien **LÉGER**';
+	              this.cssCls = 'bg-success';
+	            }
+	          }
+
+	          return scoreDisp;
 	        }
 	      },
 	      nextStates: [
@@ -47368,29 +47389,73 @@
 	        id: 2, // SCAN TCL
 	        l: 'Voir le diagnostic',
 	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 && $scope.life.y + $scope.life.m + $scope.life.v >= 13
-	          // && ($scope.life.m > 4)
-	          ;
-	        }
-	      },
-	      // ==== TCM ====
-	      {
-	        id: 12, // SCAN TCM
-	        l: 'Voir le diagnostic',
-	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m > 4 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age == 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m > 4;
-	        }
-	      },
-	      // ==== TCG ====
-	      {
-	        id: 11, // SCAN TCG
-	        l: 'Voir le diagnostic',
-	        cond: function () {
-	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v < 9 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.y + $scope.life.m + $scope.life.v <= 12 && $scope.life.y + $scope.life.m + $scope.life.v >= 9 && $scope.life.m <= 4;
+	          return $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age < 2 && $scope.life.y + $scope.life.m + $scope.life.v < 15 || $scope.life.y !== undefined && $scope.life.m !== undefined && $scope.life.v !== undefined && $scope.life.age == 2 && $scope.life.y + $scope.life.m + $scope.life.v < 13;
 	        }
 	      }]
-	    }, { // 2 : Scan TCL !!
-	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien LÉGER</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
+	    },
+	    // // ==== TCM ====
+	    // {
+	    //   id : 12, // SCAN TCM
+	    //   l : 'Voir le diagnostic',
+	    //   cond : function(){
+	    //     return (
+	    //       (
+	    //         $scope.life.y !== undefined
+	    //         && $scope.life.m !== undefined
+	    //         && $scope.life.v !== undefined
+	    //       )
+	    //       && $scope.life.age < 2
+	    //       && ($scope.life.y+$scope.life.m+$scope.life.v) < 13
+	    //       && ($scope.life.y+$scope.life.m+$scope.life.v) >= 9
+	    //       && ($scope.life.m > 4)
+	    //     )
+	    //     ||
+	    //     (
+	    //       (
+	    //         $scope.life.y !== undefined
+	    //         && $scope.life.m !== undefined
+	    //         && $scope.life.v !== undefined
+	    //       )
+	    //       && $scope.life.age == 2
+	    //       && ($scope.life.y+$scope.life.m+$scope.life.v) < 13
+	    //       && ($scope.life.y+$scope.life.m+$scope.life.v) >= 9
+	    //       && ($scope.life.m > 4)
+	    //     )
+	    //   }
+	    // },
+	    // // ==== TCG ====
+	    // {
+	    //   id : 11, // SCAN TCG
+	    //   l : 'Voir le diagnostic',
+	    //   cond : function(){
+	    //     return (
+	    //       (
+	    //         $scope.life.y !== undefined
+	    //         && $scope.life.m !== undefined
+	    //         && $scope.life.v !== undefined
+	    //       )
+	    //       &&
+	    //       ($scope.life.y+$scope.life.m+$scope.life.v) < 9
+	    //     )
+	    //     ||
+	    //     (
+	    //       (
+	    //         $scope.life.y !== undefined
+	    //         && $scope.life.m !== undefined
+	    //         && $scope.life.v !== undefined
+	    //       )
+	    //       &&
+	    //       (
+	    //         ($scope.life.y+$scope.life.m+$scope.life.v) <= 12
+	    //         && ($scope.life.y+$scope.life.m+$scope.life.v) >= 9
+	    //         && ($scope.life.m <= 4)
+	    //       )
+	    //     )
+	    //   }
+	    // }
+
+	    { // 2 : Scan !!
+	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<h4>Scanner immédiat</h4>' + '</div>'
 	    }, { // 3 : Dois-je faire un Scanner ?
 	      question: 'Constatez-vous un des points suivants&nbsp;?',
 	      options: [{
@@ -47526,7 +47591,7 @@
 	    }, { // 6 : Msg scan enfant
 	      question: '<div class="box2 bg-warning txt-warning txt-c round">' + '<i class="fa fa-exclamation-circle fa-2x"></i>' + '<hr><h4>Observation vs scanner</h4>' + '<p class="txt-c">0,9% risques LCI</p>' + '</div>' + '<div class="box txt-tiny txt-c">' + '<p class="txt-c"><strong>Choix scanner vs observation (pendant 24h)</strong></p>' + '<p>En fonction de l’expérience du praticien, de l’association ou non de plusieurs symptômes et/ou d’une aggravation clinique depuis l’admission</p>' + '</div>'
 	    }, { // 7 : Msg AVK
-	      question: '<div class="box2 bg-danger txt-danger txt-l round">' + '<center><i class="fa fa-exclamation-triangle fa-2x"></i>' + '<hr><h4>Scanner immédiat</h4>' + '<p class="txt-c"><strong>et de contrôle entre H12 et H24</strong></p></center>' + '</div>' + '<div class="box txt-tiny txt-l">' + '<ul>' + '<li><strong>antagoniser à la moindre pétéchie</strong></li>' + '<li>si pas d’hémoragie, maintenir INR thérapeutique, pas de réversion préventive</li>' + '</ul><hr>' + '<h4 class="txt-c">Traitement (HAS 2008)</h4>' + '<p class="txt-c">Vitamine K 10mg - privilégier la voie orale</p>' + '<ul>' + '<li><strong>si INR disponible</strong>:<br>' + 'concentré de complexe prothrombinique à dose adaptée à l’INR</li>' + '<li><strong>si INR non disponible</strong>:<br>' + 'concentré de complexe prothrombinique 25U/kg (soit 1ml/kg)</li>' + '<li><strong>Contrôle INR à 30min</strong>:<br>' + 'si INR > 1,5 : nouvelle dose de CCP, puis contrôle INR à 6-8h</li>' + '</ul>' + '</div>'
+	      question: '<div class="box2 bg-danger txt-danger txt-l round">' + '<center><i class="fa fa-exclamation-triangle fa-2x"></i>' + '<hr><h4>Scanner immédiat</h4>' + '<p class="txt-c"><strong>et de contrôle entre H12 et H24</strong></p></center>' + '</div>' + '<div class="box txt-tiny txt-l">' + '<ul>' + '<li><strong>antagoniser à la moindre pétéchie</strong></li>' + '<li>si pas d’hémoragie, maintenir INR thérapeutique, pas de réversion préventive</li>' + '</ul><hr>' + '<h4 class="txt-c">Traitement (HAS 2008)</h4>' + '<p class="txt-c">Vitamine K 10mg - privilégier la voie orale</p>' + '<ul>' + '<li><strong>si INR disponible</strong>&nbsp;:<br>' + 'concentré de complexe prothrombinique à dose adaptée à l’INR</li>' + '<li><strong>si INR non disponible</strong>&nbsp;:<br>' + 'concentré de complexe prothrombinique 25U/kg (soit 1ml/kg)</li>' + '<li><strong>Contrôle INR à 30min</strong>&nbsp;:<br>' + 'si INR > 1,5 : nouvelle dose de CCP, puis contrôle INR à 6-8h</li>' + '</ul>' + '</div>'
 	    }, { // 8 : Msg scan 1h
 	      question: '<div class="box2 bg-warning txt-warning txt-c round">' + '<i class="fa fa-exclamation-circle fa-2x"></i><hr>' + '<h4>Scanner au maximum dans l’heure qui suit</h4>' + '</div>'
 	    }, { // 9 : Q complémentaires
@@ -47569,12 +47634,25 @@
 	      }]
 	    }, { // 10 : Scan 4 ~ 8h
 	      question: '<div class="box2 bg-warning txt-warning txt-c round">' + '<i class="fa fa-exclamation-circle fa-2x"></i><hr>' + '<h4>Scanner à la 6ème heure<br>(entre 4 et 8h)</h4>' + '</div>'
-	    }, { // 11 : Scan TCG !!
-	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien GRAVE</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
-	    }, { // 12 : Scan TCG !!
-	      question: '<div class="box2 bg-danger txt-danger txt-c round">' + '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>' + '<p>Traumatisme cranien MOYEN</p>' + '<h4>Scanner immédiat</h4>' + '</div>'
 	    }];
 	  };
+
+	  // { // 11 : Scan TCG !!
+	  //   question :
+	  //     '<div class="box2 bg-danger txt-danger txt-c round">'+
+	  //       '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>'+
+	  //       '<p>Traumatisme cranien GRAVE</p>'+
+	  //       '<h4>Scanner immédiat</h4>'+
+	  //     '</div>'
+	  // },
+	  // { // 12 : Scan TCG !!
+	  //   question :
+	  //     '<div class="box2 bg-danger txt-danger txt-c round">'+
+	  //       '<i class="fa fa-exclamation-triangle fa-2x"></i><hr>'+
+	  //       '<p>Traumatisme cranien MOYEN</p>'+
+	  //       '<h4>Scanner immédiat</h4>'+
+	  //     '</div>'
+	  // }
 	  init();
 	}]);
 
